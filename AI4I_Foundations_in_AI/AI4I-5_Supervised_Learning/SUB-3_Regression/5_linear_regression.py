@@ -13,7 +13,7 @@ from sklearn.compose import ColumnTransformer, make_column_transformer
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, KFold
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -52,6 +52,7 @@ class GetAge(BaseEstimator, TransformerMixin):
         """TASK: Replace the 'YearBuilt' column values with the calculated age (subtract the 
         current year from the original values).
         """
+        X = current_year - X
         
         return X
 
@@ -82,67 +83,113 @@ def main():
     # Create the pipeline ...
     # 1. Pre-processing
     # Define variables made up of lists. Each list is a set of columns that will go through the same data transformations.
-    numerical_features = ["LotArea", "YearBuilt","1stFlrSF","2ndFlrSF","FullBath","BedroomAbvGr","TotRmsAbvGrd"] # TASK: Define numerical column names
+    numerical_features = ["LotArea", "1stFlrSF","2ndFlrSF","FullBath","BedroomAbvGr","TotRmsAbvGrd"] # TASK: Define numerical column names
     categorical_features = ["HouseStyle"] # TASK: Define categorical column names
+
+    # YearBuilt will be transformed into house age
+    age_feature = ["YearBuilt"]
     
     # """TASK:
     # Define the data processing steps (transformers) to be applied to the numerical features in the dataset.
 
     # At a minimum, use 2 transformers: GetAge() and one other. Combine them using make_pipeline() or Pipeline()
     # """
-    # preprocess = make_column_transformer(
-    #     ("""TASK: Define transformers""", numerical_features),
-    #     (OneHotEncoder(), categorical_features)
-    # )
+
+    preprocess = make_column_transformer(
+        # YearBuilt → Age → StandardScaler
+        (
+            make_pipeline(
+                GetAge(),
+                StandardScaler(),
+            ),
+            age_feature
+        ),
+
+        # Numerical features → Imputation → StandardScaler
+        (
+            make_pipeline(
+                SimpleImputer(strategy='median'),
+                StandardScaler(),
+            ),
+            numerical_features
+        ),
+
+        # Categorical feature → One-hot encoding
+        (
+            make_pipeline(
+                OneHotEncoder(handle_unknown="ignore")
+            ),
+            categorical_features
+        )
+    )
     
-    # # 2. Combine pre-processing with ML algorithm
-    # model = make_pipeline(
-    #     preprocess,
-    #     # TASK : replace with ML algorithm from scikit
-    # )
+    # 2. Combine pre-processing with ML algorithm
+    model = make_pipeline(
+        preprocess,
+        # TASK : replace with ML algorithm from scikit
+        LinearRegression()
+    )
 
-    # # TRAINING
-    # ##########
-    # # Train/Test Split
-    # """TASK:
-    # Split the data in test and train sets by completing the train_test_split function below. Define a random_state value so that 
-    # the experiment is repeatable.
-    # """
-    # x_train, x_test, y_train, y_test = train_test_split() # TASK: Complete the code
+    # TRAINING
+    ##########
+    # Train/Test Split
+    """TASK:
+    Split the data in test and train sets by completing the train_test_split function below. Define a random_state value so that 
+    the experiment is repeatable.
+    """
+    x_train, x_test, y_train, y_test = train_test_split(features, output_var, test_size=0.3, random_state=42) # TASK: Complete the code
 
-    # # Train the pipeline
-    # model.fit(x_train, y_train)
+    # Train the pipeline
+    model.fit(x_train, y_train)
 
-    # # Optional: Train with cross-validation and/or parameter grid search
+    # Optional: Train with cross-validation and/or parameter grid search
+    # Create a KFold object
+    kf = KFold(n_splits=6, shuffle=True, random_state=5)
 
-    # # SCORING/EVALUATION
-    # ####################
-    # # Fit the model on the test data
-    # pred_test = model.predict(x_test)
+    # Compute 6-fold cross-validation scores
+    cv_scores = cross_val_score(model, features, output_var, cv=kf, scoring="r2")
+
+    print("Cross-validation R² scores:")
+    print(cv_scores)
+
+    print("Mean R²: {:.5f}".format(cv_scores.mean()))
+    print("Standard deviation: {:.5f}".format(cv_scores.std()))
+
+    # SCORING/EVALUATION
+    ####################
+    # Fit the model on the test data
+    pred_test = model.predict(x_test)
     
-    # # Display the results of the metrics
-    # """TASK:
-    # Calculate the RMSE and Coeff of Determination between the actual and predicted sale prices. 
+    # Display the results of the metrics
+    """TASK:
+    Calculate the RMSE and Coeff of Determination between the actual and predicted sale prices. 
         
-    # Name your variables rmse and r2 respectively.
-    # """
-    # print("Results on Test Data")
-    # print("####################")
-    # print("RMSE: {:.2f}".format(rmse))
-    # print("R2 Score: {:.5f}".format(r2))
-    
-    # # Compare actual vs predicted values
-    # """TASK:
-    # Create a new dataframe which combines the actual and predicted Sale Prices from the test dataset. You
-    # may also add columns with other information such as difference, abs diff, %tage difference etc.
-    
-    # Name your variable compare
-    # """
-    # display_df_info('Actual vs Predicted Comparison', compare)
+    Name your variables rmse and r2 respectively.
+    """
+    rmse = mean_squared_error(y_test, pred_test) ** 0.5
+    r2 = r2_score(y_test, pred_test)
 
-    # # Save the model 
-    # with open('my_model_lr.joblib', 'wb') as fo:  
-    #     joblib.dump(model, fo)
+    print("Results on Test Data")
+    print("####################")
+    print("RMSE: {:.2f}".format(rmse))
+    print("R2 Score: {:.5f}".format(r2))
+    
+    # Compare actual vs predicted values
+    """TASK:
+    Create a new dataframe which combines the actual and predicted Sale Prices from the test dataset. You
+    may also add columns with other information such as difference, abs diff, %tage difference etc.
+    
+    Name your variable compare
+    """
+    compare = pd.DataFrame({
+        "Actual Sale Prices" : y_test, 
+        "Predicted Sale Prices" : pred_test
+    })
+    display_df_info('Actual vs Predicted Comparison', compare)
+
+    # Save the model 
+    with open('my_model_lr.joblib', 'wb') as fo:  
+        joblib.dump(model, fo)
 
 
 if __name__ == '__main__':
