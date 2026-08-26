@@ -139,9 +139,6 @@ def main():
     """
     x_train, x_test, y_train, y_test = train_test_split(features, output_var, test_size=0.3, random_state=42) # TASK: Complete the code
 
-    # Train the pipeline
-    model.fit(x_train, y_train)
-
     # Optional: Train with cross-validation and/or parameter grid search
     # Create a KFold object
     kf = KFold(n_splits=6, shuffle=True, random_state=5)
@@ -154,6 +151,9 @@ def main():
 
     print("Mean R²: {:.5f}".format(cv_scores.mean()))
     print("Standard deviation: {:.5f}".format(cv_scores.std()))
+
+    # Train the pipeline
+    model.fit(x_train, y_train)
 
     # SCORING/EVALUATION
     ####################
