@@ -224,11 +224,12 @@ def analyze_customers_by_transaction_count(df: pd.DataFrame) -> None:
     plt.ylabel("Transaction Count")
     plt.xticks(rotation=45)
     plt.show()
-     
-    
-if __name__ == "__main__":
+
+
+def main() -> None:
     data_path = "Dataset/Online Retail.xlsx"
     df = load_data(data_path)
+
     display_overview(df)
     check_missing_values(df)
     check_duplicates(df)
@@ -241,3 +242,7 @@ if __name__ == "__main__":
     analyze_hourly_sales(df)
     analyze_customers_by_sales(df)
     analyze_customers_by_transaction_count(df)
+
+
+if __name__ == "__main__":
+    main()
