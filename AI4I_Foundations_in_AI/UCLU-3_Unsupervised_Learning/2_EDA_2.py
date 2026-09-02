@@ -1,6 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib
+
+matplotlib.use('Agg')  # Use non-interactive backend
 
 def load_data(path: str) -> pd.DataFrame:
     # Load the Excel file
