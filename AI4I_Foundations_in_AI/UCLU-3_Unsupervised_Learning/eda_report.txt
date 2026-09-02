@@ -1,0 +1,95 @@
+/home/robin/AISG/AI4I_Foundations_in_AI/UCLU-3_Unsupervised_Learning/1_EDA.py:92: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.barplot(x=missing.index, y=missing.values, palette="viridis")
+/home/robin/AISG/AI4I_Foundations_in_AI/UCLU-3_Unsupervised_Learning/1_EDA.py:123: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `y` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.barplot(x=country_sales.values, y=country_sales.index, palette="magma")
+
+=== Dataset Overview ===
+Rows: 541909
+Columns: 9
+Duplicate rows: 5268
+
+Sample records:
+InvoiceNo StockCode                         Description  Quantity         InvoiceDate  UnitPrice  CustomerID        Country  TotalPrice
+   536365    85123A  WHITE HANGING HEART T-LIGHT HOLDER         6 2010-12-01 08:26:00       2.55       17850 United Kingdom       15.30
+   536365     71053                 WHITE METAL LANTERN         6 2010-12-01 08:26:00       3.39       17850 United Kingdom       20.34
+   536365    84406B      CREAM CUPID HEARTS COAT HANGER         8 2010-12-01 08:26:00       2.75       17850 United Kingdom       22.00
+   536365    84029G KNITTED UNION FLAG HOT WATER BOTTLE         6 2010-12-01 08:26:00       3.39       17850 United Kingdom       20.34
+   536365    84029E      RED WOOLLY HOTTIE WHITE HEART.         6 2010-12-01 08:26:00       3.39       17850 United Kingdom       20.34
+
+Data types:
+InvoiceNo              object
+StockCode              object
+Description            object
+Quantity                int64
+InvoiceDate    datetime64[us]
+UnitPrice             float64
+CustomerID              Int64
+Country                   str
+TotalPrice            float64
+dtype: object
+
+=== Missing Values ===
+             Missing  Missing_%
+CustomerID    135080  24.926694
+Description     1454   0.268311
+InvoiceNo          0   0.000000
+Quantity           0   0.000000
+StockCode          0   0.000000
+InvoiceDate        0   0.000000
+UnitPrice          0   0.000000
+Country            0   0.000000
+TotalPrice         0   0.000000
+
+=== Numeric Summary ===
+        Quantity  UnitPrice  TotalPrice
+count  541909.00  541909.00   541909.00
+mean        9.55       4.61       17.99
+std       218.08      96.76      378.81
+min    -80995.00  -11062.06  -168469.60
+25%         1.00       1.25        3.40
+50%         3.00       2.08        9.75
+75%        10.00       4.13       17.40
+max     80995.00   38970.00   168469.60
+
+=== Country-Level Summary ===
+                Transactions  Customers  TotalSales  AvgOrderValue
+Country                                                           
+United Kingdom         23494       3950  8187806.36          16.53
+Germany                  603         95   221698.21          23.35
+France                   461         87   197403.90          23.07
+EIRE                     360          3   263276.82          32.12
+Belgium                  119         25    40910.96          19.77
+Spain                    105         31    54774.58          21.62
+Netherlands              101          9   284661.54         120.06
+Switzerland               74         21    56385.35          28.16
+Portugal                  71         19    29367.02          19.33
+Australia                 69          9   137077.27         108.88
+
+=== Top Products ===
+                                    UnitsSold   Revenue
+Description                                            
+WORLD WAR 2 GLIDERS ASSTD DESIGNS       53847  13587.93
+JUMBO BAG RED RETROSPOT                 47363  92356.03
+ASSORTED COLOUR BIRD ORNAMENT           36381  58959.73
+POPCORN HOLDER                          36334  33969.46
+PACK OF 72 RETROSPOT CAKE CASES         36039  21059.72
+WHITE HANGING HEART T-LIGHT HOLDER      35317  99668.47
+RABBIT NIGHT LIGHT                      30680  66756.59
+MINI PAINT SET VINTAGE                  26437  16810.42
+PACK OF 12 LONDON TISSUES               26315   7972.76
+PACK OF 60 PINK PAISLEY CAKE CASES      24753  12189.47
+
+=== Data Quality Checks ===
+Negative Quantity count: 10624
+Negative UnitPrice count: 2
+Zero UnitPrice count: 2515
+Unique customers: 4372
+Unique invoices: 25900
+
+EDA plots saved in 'eda_outputs'
