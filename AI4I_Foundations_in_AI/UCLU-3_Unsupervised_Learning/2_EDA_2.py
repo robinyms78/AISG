@@ -1,9 +1,21 @@
+import os
+
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import matplotlib
 
-matplotlib.use('Agg')  # Use non-interactive backend
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+OUTPUT_DIR = "eda_outputs"
+
+
+def save_plot(filename: str) -> None:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    output_path = os.path.join(OUTPUT_DIR, filename)
+    plt.savefig(output_path, bbox_inches="tight", dpi=150)
+    plt.close()
 
 def load_data(path: str) -> pd.DataFrame:
     # Load the Excel file
@@ -39,7 +51,7 @@ def check_missing_values(df: pd.DataFrame) -> None:
 
     plt.title("Missing Values by Column")
     plt.ylabel("Number of Missing Values")
-    plt.show()
+    save_plot("missing_values.png")
 
 def check_duplicates(df: pd.DataFrame) -> None:
     print("Number of duplicate rows:", df.duplicated().sum())
@@ -80,8 +92,7 @@ def check_numerical_quantity(df: pd.DataFrame) -> None:
     # Adjust spacing between subplots
     plt.tight_layout()
     
-    # Display figure
-    plt.show()
+    save_plot("quantity_and_unit_price_distributions.png")
 
 def check_negative_quantity(df: pd.DataFrame) -> None:
     print("Negative Quantity:",
@@ -121,7 +132,7 @@ def analyse_sales_by_country(df: pd.DataFrame) -> None:
     plt.xlabel("Country")
     plt.ylabel("Total Sales")
     plt.xticks(rotation=45)
-    plt.show()
+    save_plot("top_countries_by_total_sales.png")
 
 def analyze_best_selling_products(df: pd.DataFrame) -> None:
     top_products = (
@@ -138,7 +149,7 @@ def analyze_best_selling_products(df: pd.DataFrame) -> None:
 
     plt.title("Top 10 Products by Quantity Sold")
     plt.xlabel("Quantity Sold")
-    plt.show()
+    save_plot("top_products_by_quantity_sold.png")
 
 def analyze_monthly_sales(df: pd.DataFrame) -> None:
     df["Year"] = df["InvoiceDate"].dt.year
@@ -164,7 +175,7 @@ def analyze_monthly_sales(df: pd.DataFrame) -> None:
     plt.ylabel("Total Sales")
     plt.xticks(rotation=45)
     plt.grid()
-    plt.show()
+    save_plot("monthly_sales_trend.png")
 
 def analyze_hourly_sales(df: pd.DataFrame) -> None:
     df["Year"] = df["InvoiceDate"].dt.year
@@ -185,7 +196,7 @@ def analyze_hourly_sales(df: pd.DataFrame) -> None:
     plt.title("Sales by Hour")
     plt.xlabel("Hour")
     plt.ylabel("Total Sales")
-    plt.show()
+    save_plot("sales_by_hour.png")
 
 def analyze_customers_by_sales(df: pd.DataFrame) -> None:
     unique_customers = df["CustomerID"].nunique()
@@ -207,7 +218,7 @@ def analyze_customers_by_sales(df: pd.DataFrame) -> None:
     plt.xlabel("Customer ID")
     plt.ylabel("Total Sales")
     plt.xticks(rotation=45)
-    plt.show()
+    save_plot("top_customers_by_total_sales.png")
 
 def analyze_customers_by_transaction_count(df: pd.DataFrame) -> None:
     customer_transaction_counts = (
@@ -226,7 +237,7 @@ def analyze_customers_by_transaction_count(df: pd.DataFrame) -> None:
     plt.xlabel("Customer ID")
     plt.ylabel("Transaction Count")
     plt.xticks(rotation=45)
-    plt.show()
+    save_plot("top_customers_by_transaction_count.png")
 
 
 def main() -> None:
