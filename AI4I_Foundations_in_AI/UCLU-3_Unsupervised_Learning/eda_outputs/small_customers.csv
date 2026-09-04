@@ -697,7 +697,6 @@ CustomerID,Recency,Frequency,Monetary,Cluster,CustomerType
 15623,142,19,301.03,1,small
 15637,53,15,223.36,1,small
 15639,135,25,425.32,1,small
-15646,158,35,447.64,1,small
 15648,205,25,657.35,1,small
 15649,337,2,816.0,1,small
 15652,92,21,337.74,1,small
@@ -1208,7 +1207,6 @@ CustomerID,Recency,Frequency,Monetary,Cluster,CustomerType
 17788,74,5,1117.9,1,small
 17789,282,14,225.9,1,small
 17791,30,10,106.1,1,small
-17795,180,46,350.39,1,small
 17805,74,10,512.31,1,small
 17816,37,17,36.56,1,small
 17824,52,13,298.4,1,small

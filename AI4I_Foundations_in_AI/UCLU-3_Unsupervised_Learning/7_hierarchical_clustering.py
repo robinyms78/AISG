@@ -89,12 +89,15 @@ def add_cluster_labels(df_scaled, cluster_labels):
     df_scaled['Cluster'] = cluster_labels
     print(df_scaled.head())
 
+def main(path: str):
+    df_scaled = prepare_data(path)
+    plot_distributions(df_scaled)
+    plot_dendrogram(df_scaled)
+    cluster_labels = plot_3d_clusters(df_scaled)
+    plot_pca(df_scaled, cluster_labels)
+    add_cluster_labels(df_scaled, cluster_labels)
+
 
 if __name__ == "__main__":
     path = "eda_outputs/large_customers.csv"
-    df = prepare_data(path)
-    plot_distributions(df)
-    plot_dendrogram(df)
-    cluster_labels = plot_3d_clusters(df)
-    plot_pca(df, cluster_labels)
-    add_cluster_labels(df, cluster_labels)
+    main(path)

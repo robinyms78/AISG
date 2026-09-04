@@ -53,10 +53,13 @@ def get_association_rules(basket):
         (rules['confidence'] >= 0.8) ].sort_values(['lift','confidence'], ascending=False)
     print(filtered_rules.head())
 
+def main(path: str, processed_data_path: str):
+    df = identify_customers(path)
+    basket = get_transaction(processed_data_path, df)
+    get_association_rules(basket)
+
 
 if __name__ == "__main__":
     path = "eda_outputs/small_customers.csv"
-    df = identify_customers(path)
-    path = "Dataset/processed_data.csv"
-    basket = get_transaction(path, df)
-    get_association_rules(basket)
+    processed_data_path = "Dataset/processed_data.csv"
+    main(path, processed_data_path)

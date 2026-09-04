@@ -68,19 +68,19 @@ def visualize_plot(rfm: pd.DataFrame) -> None:
     sns.histplot(data=rfm, x="Frequency", bins=10)
     plt.title("Distribution of Frequency")
     plt.xlabel("Frequency")  
-    plt.savefig("eda_outputs/frequency_distribution.png", bbox_inches="tight", dpi=150)
+    plt.savefig("eda_outputs/kmeans_clustering/frequency_distribution.png", bbox_inches="tight", dpi=150)
 
     plt.figure(figsize=(10, 6))
     sns.histplot(data=rfm, x="Monetary", bins=10)
     plt.title("Distribution of Monetary")
     plt.xlabel("Monetary")  
-    plt.savefig("eda_outputs/monetary_distribution.png", bbox_inches="tight", dpi=150)
+    plt.savefig("eda_outputs/kmeans_clustering/monetary_distribution.png", bbox_inches="tight", dpi=150)
 
     plt.figure(figsize=(10, 6))
     sns.histplot(data=rfm, x="Recency", bins=10)
     plt.title("Distribution of Recency")
     plt.xlabel("Recency")  
-    plt.savefig("eda_outputs/recency_distribution.png", bbox_inches="tight", dpi=150)
+    plt.savefig("eda_outputs/kmeans_clustering/recency_distribution.png", bbox_inches="tight", dpi=150)
 
 def find_optimal_clusters(rfm_log: pd.DataFrame) -> None:
     inertia = {}
@@ -95,7 +95,7 @@ def find_optimal_clusters(rfm_log: pd.DataFrame) -> None:
     plt.xlabel('K Numbers')
     plt.ylabel('Inertia')
     plt.title('Elbow Method')
-    plt.savefig('eda_outputs/elbow_plot.png', bbox_inches='tight', dpi=150)
+    plt.savefig('eda_outputs/kmeans_clustering/elbow_plot.png', bbox_inches='tight', dpi=150)
 
 def train_kmeans(rfm_log: pd.DataFrame, n_clusters: int) -> pd.DataFrame:
     kmeans = KMeans(n_clusters=n_clusters)
@@ -111,7 +111,7 @@ def visualize_3d_clusters(rfm_log: pd.DataFrame) -> None:
     ax.scatter(rfm_log.Recency, rfm_log.Frequency, 
                             rfm_log.Monetary, c=rfm_log.Cluster,
                             cmap='viridis', linewidth=0.5);
-    plt.savefig('eda_outputs/cluster_plot.png', bbox_inches='tight', dpi=150)
+    plt.savefig('eda_outputs/kmeans_clustering/cluster_plot.png', bbox_inches='tight', dpi=150)
 
 def visualize_2d_clusters(rfm_log: pd.DataFrame) -> None:
     features = ['Recency', 'Frequency', 'Monetary']
@@ -129,7 +129,7 @@ def visualize_2d_clusters(rfm_log: pd.DataFrame) -> None:
     plt.xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.1%} variance)')
     plt.ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.1%} variance)')
     plt.legend(title='Cluster')
-    plt.savefig('eda_outputs/2d_cluster_plot.png', bbox_inches='tight', dpi=150)
+    plt.savefig('eda_outputs/kmeans_clustering/2d_cluster_plot.png', bbox_inches='tight', dpi=150)
     plt.close()
 
 def split_data(rfm_log: pd.DataFrame, model) -> None:
@@ -163,11 +163,9 @@ def split_data(rfm_log: pd.DataFrame, model) -> None:
         )
         print(f'Saved {len(customers)} {customer_type} customers')
 
-
-if __name__ == "__main__":
+def main(path: str):
     # Example usage
-    data_path = "Dataset/processed_data.csv"  
-    df = load_data(data_path)
+    df = load_data(path)
     df = prepare_data(df)
     df = transform_data(df)
     visualize_plot(df)
@@ -176,3 +174,9 @@ if __name__ == "__main__":
     visualize_3d_clusters(df)
     visualize_2d_clusters(df)
     split_data(df, model)
+
+
+if __name__ == "__main__":
+    # Example usage
+    data_path = "Dataset/processed_data.csv"  
+    main(data_path)
